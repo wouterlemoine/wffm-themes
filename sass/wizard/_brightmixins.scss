@@ -1,0 +1,74 @@
+
+// ===============================================
+//   Custom Mixins
+// ===============================================
+
+@mixin myboxmodel() { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; -o-box-sizing: border-box; -ms-box-sizing: border-box; box-sizing: border-box; }
+@mixin myboxmodelreset() { -webkit-box-sizing: content-box; -moz-box-sizing: content-box; -o-box-sizing: content-box; -ms-box-sizing: content-box; box-sizing: content-box; }
+
+
+@mixin mycenterBlockElem() { float: left; position: relative;  width: 100%;
+    > div {clear: left;float: right;position: relative;right: 50%;text-align: center;
+           > * {display:block; float: left; left: 50%;position: relative;}
+    }
+}
+
+@mixin myiconBox($mixinSize, $mixinBordercolor) { 
+    height: $mixinSize; width: $mixinSize;text-align:center; display:block;  background: #fff; @include border-radius($mixinSize/2);  line-height: ($mixinSize - 2px); font-size: ($mixinSize - 2px); border: 1px solid $mixinBordercolor;
+}
+
+
+@mixin verticalCenter() { display:table; width: 100%;height: 100%;
+    > * {display: table-cell;vertical-align: middle; }
+}
+
+
+@mixin WLtransform($value) { 
+    -webkit-transform: $value;
+    -moz-transform: $value;
+    -ms-transform: $value;
+    transform: $value;
+}
+
+@mixin WLtransition($mixinvalue: all 0.2s ease-in-out) { 
+    -webkit-transition: $mixinvalue;
+    -moz-transition: $mixinvalue;
+    transition: $mixinvalue;
+}
+
+// ! Pseudo elements
+// -----------------
+
+@mixin mypseudo() {
+	content: "";
+	display: block;
+	position: absolute;
+}
+
+// ! CSS triangles 
+// ---------------
+
+@mixin mycsstriangle($triangle-size, $triangle-color, $triangle-direction) {
+	
+	@include mypseudo();
+	
+	width: 0;
+	height: 0;
+	border: solid $triangle-size;
+	
+	@if ($triangle-direction == top) {
+		border-color: $triangle-color transparent transparent transparent;
+	}
+	@if ($triangle-direction == bottom) {
+		border-color: transparent transparent $triangle-color transparent;
+	}
+	@if ($triangle-direction == left) {
+		border-color: transparent transparent transparent $triangle-color;
+	}
+	@if ($triangle-direction == right) {
+		border-color: transparent $triangle-color transparent transparent;
+	}
+}
+
+
+

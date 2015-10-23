@@ -1,0 +1,1066 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Tool</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="css/wizard/wizard.css" />
+    <link type="text/css" rel="stylesheet" href="css/Custom/custom.css" /><!--for the inputform--> 
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.js"></script>
+    <script src="js/jquery.bxslider.min.js"></script>
+    <script src="js/jquery.colorbox-min.js"></script>
+    <script src="js/wffm.js"></script>
+    <script src="js/site.js"></script>
+
+
+    <script src="sass.js-master/dist/sass.js"></script>
+    <script>
+
+        var myexternalfileWFFM = ''; 
+        var myexternalfileUtil = ''; 
+
+        $( document ).ready(function() {
+        
+           
+            var sass = new Sass();
+            var valueslist = new Object() 
+            $('.InputPane input, .InputPane select').each(function() {
+                valueslist[$(this).attr('id')] = $(this).val()
+            });
+            var wffmvars = "";
+            var x;
+            for (x in valueslist) {
+                wffmvars += '$' +  x + ' : ' + valueslist[x] + "; ";
+            }
+
+$.when(
+     $.ajax({
+         url: "/sass/WFFM/_wffmStyling.scss", dataType: "text",
+         success: function(data) {
+             myexternalfileWFFM = data;
+            // console.log(myexternalfileWFFM);
+         },
+         error: function() { console.log("oeps _wffmStyling");}
+     }),
+     $.ajax({
+         url: "/sass/WFFM/_utilities.scss", dataType: "text",
+         success: function(data) {
+             myexternalfileUtil = data;
+            // console.log(myexternalfileUtil);
+         },
+         error: function() { console.log("oeps _utilities");}
+     })
+ ).then( function(){
+    // console.log('all complete');
+
+
+     
+
+     var mySassVars= wffmvars; 
+     sass.writeFile('_utilities.scss', myexternalfileUtil);
+     sass.writeFile('_variables.scss', mySassVars);
+     sass.writeFile('_wffmStyling.scss', myexternalfileWFFM);
+
+     sass.compile('@import "_utilities"; @import "_variables"; @import "_wffmStyling";', function(result) {
+         //console.log("compiled", result.text);
+         $('.demoPane').prepend('<style>' + result.text+ '</style>'); 
+         $('.download textarea').val(result.text); 
+     });
+ });
+
+
+
+      
+       
+
+
+   
+    $(".inputbox  input, .inputbox select").live( "change", function() {
+        $('.demoPane > style').remove();
+        wffmvars = '';
+        $('.InputPane input, .InputPane select').each(function() {
+            valueslist[$(this).attr('id')] = $(this).val()
+        });
+        for (x in valueslist) {
+            wffmvars += '$' +  x + ' : ' + valueslist[x] + "; ";
+        }
+        console.log(wffmvars);
+        mySassVars= wffmvars;
+        sass.removeFile('_variables.scss');
+        sass.writeFile('_variables.scss', mySassVars);
+        sass.compile('@import "_utilities"; @import "_variables"; @import "_wffmStyling";', function(result) {
+            //console.log("compiled", result.text);
+            $('.demoPane').prepend('<style>' + result.text+ '</style>'); 
+            $('.download textarea').val(result.text); 
+
+        });
+    });
+});
+
+
+
+    </script>
+
+</head>
+<body>
+    <div class="InputPane">
+        <div class="iconbox">
+            <i class="fa fa-arrow-right "></i>
+        </div>
+        <form>
+            <h1>Theme Creator for WFFM </h1>
+
+            <p>
+                Edit the values &  preview your form. When you're done, download your css and script file.
+            </p>
+
+
+            <div id="myCssEditor">
+
+                <h2>The form-title </h2>
+                <section>
+                    <div class="flexboxcontainer">
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>color</label><div><input value="#222222" id="scfTitleBorder-color" type="text" /> <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>  </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>font-size</label><div><input value="30px" id="scfTitleBorder-font-size" type="text" />   </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="emptyClearing"></div>
+                    <a href="javascript:;" class="showmore"><i class="fa fa-plus"></i> Show more</a>
+                    <div class="showmydiv" style="display:none">
+                        <div class="flexboxcontainer">
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>MarginBottom</label><div><input value="10px" id="scfTitleBorder-textMarginBottom" type="text" />   </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>fontfamily</label><div><input value="inherit" id="scfTitleBorder-fontfamily" type="text" />  <span class="tip">Values : inherit, or: 'Comic Sans MS', Arial, Helvetica, sans.</span> </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>font-weight</label>
+                                        <div><input value="normal" id="scfTitleBorder-font-weight" type="text" /> <span class="tip">Values : Bold or normal.</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>lineheight</label><div><input value="1em" id="scfTitleBorder-lineheight" type="text" />   </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </section>
+                <h2>The section titles</h2>
+                <section>
+                    <div class="flexboxcontainer">
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>color</label><div><input value="#ca6500" id="scfSectionLegend-color" type="text" /> <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>  </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>font-size</label><div><input value="24px" id="scfSectionLegend-font-size" type="text" /> <span class="tip">tip</span>  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="emptyClearing"></div>
+                    <a href="javascript:;" class="showmore"><i class="fa fa-plus"></i> Show more</a>
+                    <div class="showmydiv" style="display:none">
+                        <div class="flexboxcontainer">
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>MarginBottom</label><div>
+                                            <input value="10px" id="scfSectionLegend-textMarginBottom" type="text" /> <span class="tip">tip</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>fontfamily</label><div><input value="inherit" id="scfSectionLegend-fontfamily" type="text" /> <span class="tip">tip</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>font-weight</label><div>
+                                            <input value="400" id="scfSectionLegend-font-weight" type="text" /> <span class="tip">tip</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>lineheight</label><div><input value="1em" id="scfSectionLegend-lineheight" type="text" /> <span class="tip">tip</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </section>
+                <h2>Textinput, select and textarea</h2>
+                <section>
+                    <p>these are the styles for textinput, select (dropdown) and textarea</p>
+                    <div class="flexboxcontainer">
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>bordercolor</label><div><input value="#b7b7b7" id="NIE-bordercolor" type="text" /> <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>  </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>borderradius</label><div><input value="5px" id="NIE-borderradius" type="text" /> <span class="tip">tip</span>  </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>Background</label><div><input value="#ffffff" id="NIE-background" type="text" /> <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="emptyClearing"></div>
+                    <a href="javascript:;" class="showmore"><i class="fa fa-plus"></i> Show more</a>
+                    <div class="showmydiv" style="display:none">
+                        <div class="flexboxcontainer">
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>textcolor</label><div><input value="#111111" id="NIE-textcolor" type="text" /> <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>padding</label><div><input value="7px 10px" id="NIE-padding" type="text" /> <span class="tip">tip</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>padding for radio's and checkboxes</label><div><input value="3px 0 0 25px" id="NIE-label-padding-forradioandcheckboxes" type="text" /> <span class="tip">Best not to edit unless you really want to change the spacing of the radio buttons and checkboxes. </span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>height</label><div><input value="40px" id="NIE-height" type="text" /> <span class="tip">tip</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>textareaHeight</label><div><input value="100px" id="NIE-textareaHeight" type="text" /> <span class="tip">tip</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>marginbottom</label><div><input value="25px" id="scfSectionContent-marginbottom" type="text" /> <span class="tip">this is also th emargin bottom for sections</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel hidden">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>disabled-textcolor</label><div><input value="#999999" id="NIE-disabled-textcolor" type="text" /> <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>bordersize</label><div><input value="1px" id="NIE-bordersize" type="text" /> <span class="tip">tickness of the border, usually 1px or 2px</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel hidden">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>backgroundFocused</label><div><input value="#fff" id="NIE-backgroundFocused" type="text" /> <span class="tip">This means: when you click in it. Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>width</label><div><input value="100%" id="NIE-width" type="text" /> <span class="tip">always 100%</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Spacing between two halfs</label><div><input value="20px" id="scfSectionContent-spacingBetweenDividedInputBoxes" type="text" /> <span class="tip">This is the horizontal spacing when you have two half-width elements.</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>maximum width of sectioncontent</label><div><input value="1600px" id="scfSectionContent-maxwidth" type="text" /> <span class="tip">This is the maximum width of the pane containing the actual formelements. So the section title and section text are not included in this maxwidth.</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <h2>Labels for textinput, select and textarea</h2>
+                <section>
+
+                    <p>These are the styles for the labels of textinput, select and textarea</p>
+                    <div class="flexboxcontainer">
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>label-color</label><div><input value="inherit" id="NIE-label-color" type="text" /> <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>  </div>
+                                </div>
+                            </div>
+                        </div><div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>label-fontsize</label><div><input value="inherit" id="NIE-label-fontsize" type="text" /> <span class="tip">tip</span>  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="emptyClearing"></div>
+                    <a href="javascript:;" class="showmore"><i class="fa fa-plus"></i> Show more</a>
+                    <div class="showmydiv" style="display:none">
+                        <div class="flexboxcontainer">
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>label-fontfamily</label><div><input value="inherit" id="NIE-label-fontfamily" type="text" /> <span class="tip">tip</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>label-padding</label><div><input value="3px" id="NIE-label-padding" type="text" /> <span class="tip">tip</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>label-fontweight</label><div><input value="inherit" id="NIE-label-fontweight" type="text" /> <span class="tip"> </span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </section>
+
+                <h2>Errors and validation</h2>
+                <section>
+                    <div class="flexboxcontainer">
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>Errormessage textcolor</label><div><input value="#c71010" id="NIE-error-color" type="text" /> <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="emptyClearing"></div>
+                    <a href="javascript:;" class="showmore"><i class="fa fa-plus"></i> Show more</a>
+                    <div class="showmydiv" style="display:none">
+                        <div class="flexboxcontainer">
+
+                            <div class="csseditorlabel hidden">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Errormessage inline - padding</label><div><input value="0 10px" id="NIE-errorinline-padding" type="text" /> <span class="tip">tip</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Errormessage margin</label><div><input value="30px 0" id="NIE-error-margin" type="text" />  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Errormessage borderwidth</label><div><input value="1px" id="NIE-error-border" type="text" />  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Errormessage borderradius</label><div><input value="4px" id="NIE-error-borderradius" type="text" />  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Errormessage padding</label><div><input value="10px 10px 5px 10px" id="NIE-error-padding" type="text" />  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Errormessage bgColor</label><div><input value="transparent" id="NIE-error-bgColor" type="text" />  <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>required-color</label><div><input value="#888" id="NIE-required-color" type="text" /> <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>  </div>
+                                    </div>
+                                </div>
+                            </div><div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>required-fontsize</label><div><input value="20px" id="NIE-required-fontsize" type="text" /> <span class="tip">tip</span>  </div>
+                                    </div>
+                                </div>
+                            </div><div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>required-top</label><div><input value="0px" id="NIE-required-top" type="text" /> <span class="tip">tip</span>  </div>
+                                    </div>
+                                </div>
+                            </div><div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>required-right</label><div><input value="-10px" id="NIE-required-right" type="text" /> <span class="tip">tip</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </section>
+                <h2>Helptips</h2>
+                <section>
+                    <div class="flexboxcontainer">
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>color</label><div><input value="#888" id="NIE-tip-color" type="text" /> <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>  </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>fontsize</label><div><input value="12px" id="NIE-tip-fontsize" type="text" /> <span class="tip">tip</span>  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="emptyClearing"></div>
+                    <a href="javascript:;" class="showmore"><i class="fa fa-plus"></i> Show more</a>
+                    <div class="showmydiv" style="display:none">
+                        <div class="flexboxcontainer">
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>padding</label><div><input value="0 10px" id="NIE-tip-padding" type="text" /> <span class="tip">tip</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label> tip-lineheight</label><div>
+                                            <input value="1.2em" id="NIE-tip-lineheight" type="text" /> <span class="tip">tip</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Show on hover</label><div><input value="false" id="helptip-showonhover" type="text" /> <span class="tip">if true, the helptips are hidden by default, and only shown on hover. On touch devices they are allways shown if you implement modernizr (touch) because there is no hover on touch devices - todo: to check. </span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Backgroundcolor</label><div><input value="#D4D8DA" id="helptip-BgColor" type="text" /> <span class="tip">Backgroundcolor if show-on-hover is true. Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                </section>
+
+                <h2>buttons</h2>
+                <section>
+                    <div class="flexboxcontainer">
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>borderradius</label><div>
+                                        <input value="5px " id="WFFMbutton-borderradius" type="text" /> <span class="tip">of the submit button and the file-upload button</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>fontsize</label><div>
+                                        <input value="inherit" id="WFFMbutton-fontsize" type="text" /> <span class="tip">of the submit button and the file-upload button</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>fontweight</label><div>
+                                        <input value="400" id="WFFMbutton-fontweight" type="text" /> <span class="tip">of the submit button and the file-upload button. Eg: bold or normal. </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>Submitbutton BgColor</label><div>
+                                        <input value="#d56a00 " id="WFFMbuttonSubmit-BgColor" type="text" /> <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>Submitbutton BgColor hover</label><div><input value="#ff8a15 " id="WFFMbuttonSubmit-BgColor-hover" type="text" /> <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>  </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>Submitbutton textColor</label><div><input value="#fff " id="WFFMbuttonSubmit-textColor" type="text" /> <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>  </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>Submitbutton textColor hover</label><div>
+                                        <input value="#fff " id="WFFMbuttonSubmit-textColor-hover" type="text" /> <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>Submitbutton align</label><div>
+
+                                        <select name="" id="WFFMbuttonSubmit-textalign" class="">
+                                            <option value="left">left</option>
+                                            <option value="center">center</option>
+                                            <option value="right">right</option>
+                                            <option value="fullwidth">full width</option>
+                                        </select>
+                                        <span class="tip">
+                                            position the button, or make it 100% wide.
+
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>Uploadbutton BgColor</label><div>
+                                        <input value="#888 " id="WFFMbuttonUpload-BgColor" type="text" /> <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>Uploadbutton Bgcolor hover</label><div>
+                                        <input value="#777 " id="WFFMbuttonUpload-BgColor-hover" type="text" /> <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>Uploadbutton textcolor</label><div><input value="#fff " id="WFFMbuttonUpload-textColor" type="text" /> <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>  </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>Uploadbutton textColor-hover</label><div><input value="#fff " id="WFFMbuttonUpload-textColor-hover" type="text" /> <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>  </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="csseditorlabel">
+                            <div class="formElemWrapper">
+                                <div class="inputbox possibleFading">
+                                    <label>Uploadbutton lineheight</label><div><input value="1.2em " id="WFFMbuttonUpload-lineheight" type="text" />   </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="emptyClearing"></div>
+                    <a href="javascript:;" class="showmore"><i class="fa fa-plus"></i> Show more</a>
+                    <div class="showmydiv" style="display:none">
+                        <div class="flexboxcontainer">
+
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>minheight</label><div>
+                                            <input value="40px " id="WFFMbutton-minheight" type="text" /> <span class="tip">of the submit button and the file-upload button</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Submitbutton border</label><div><input value="0 none " id="WFFMbuttonSubmit-border" type="text" /> <span class="tip">EG: "0 none" if no border, or: "1px solid red"</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Submitbutton padding</label><div>
+                                            <input value="7px 20px " id="WFFMbuttonSubmit-padding" type="text" /> <span class="tip">tip</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Submitbutton fontfamily</label><div><input value="inherit" id="WFFMbuttonSubmit-fontfamily" type="text" /> <span class="tip">tip</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Uploadbutton padding</label><div><input value="9px 20px " id="WFFMbuttonUpload-padding" type="text" /> <span class="tip">tip</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Uploadbutton border</label><div>
+                                            <input value="0 none " id="WFFMbuttonUpload-border" type="text" /> <span class="tip">tip</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Uploadbutton fontfamily</label><div><input value="inherit" id="WFFMbuttonUpload-fontfamily" type="text" /> <span class="tip">tip</span>  </div>
+                                    </div>
+                                </div>
+                            </div><div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Uploadbutton height</label><div><input value="40px" id="NIE-fileinputbtn-height" type="text" /> <span class="tip">tip</span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </section>
+
+                <h2>Advanced settings</h2>
+                <section>
+                    <p>These are the basic settings. In general, these will be fine because they inherit most of the css-values Thank god for "cascading" stylesheets ;)</p>
+                    <a href="javascript:;" class="showmore"><i class="fa fa-plus"></i> Show more</a>
+                    <div class="showmydiv" style="display:none">
+                        <div class="flexboxcontainer">
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Placing of the labels</label><div>
+                                            <select name="" id="labelsOldStyle" class="">
+                                                <option value="false">Above the input elements</option>
+                                                <option value="true">Next to the input elements</option>
+                                            </select>
+                                            <span class="tip">Choose if you want the labels to stand next to the inputelements (old style) or above (recommended).<span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>scfForm BgColor</label><div>
+                                            <input value="inherit" id="scfForm-BgColor" type="text" /><span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>scfForm TextColor</label><div><input value="inherit" id="scfForm-TextColor" type="text" /> <span class="tip">Click here to <a class="switchtocolorpicker" href="#">switch to a colorpicker</a></span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>scfForm fontsize</label><div><input value="inherit" id="scfForm-fontsize" type="text" />  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>scfForm lineheight</label><div><input value="inherit" id="scfForm-lineheight" type="text" />  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>scfForm fontfamily</label><div><input value="inherit" id="scfForm-fontfamily" type="text" />  </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>useOnlyForWFFM</label><div>
+                                            <input value="true" id="useOnlyForWFFM" type="text" /> <span class="tip">
+                                                Use styling only for WFFM. See manual. Values: 'true' or 'false'.
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>removeOutline</label><div>
+                                            <input value="onlyForWFFM" id="removeOutline" type="text" />
+                                            <span class="tip">Values : 'forWholeSite', 'onlyForWFFM', 'no'.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Movinglabels</label>
+                                        <div>
+                                            <input value="false" id="movinglabels" type="text" />
+                                            <span class="tip">Activiating this with "true" will place the labels on top of the input-elements. This needs additional jquery to work as movinglabels on focus (and on prefilled). </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Use breakpoints</label><div><input value="true" id="useBreakpoints" type="text" /> <span class="tip">if true, we generate two breakpoints so the webform is responsive. If false, we don't. </span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Breakpoint : mobile-end</label><div><input value="600px" id="WFFMrespond-mobile-end" type="text" /> <span class="tip"></span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="csseditorlabel hidden">
+                                <div class="formElemWrapper">
+                                    <div class="inputbox possibleFading">
+                                        <label>Breakpoint : tablet-end</label><div><input value="980px" id="WFFMrespond-tablet-end" type="text" /> <span class="tip"></span>  </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+
+
+        </form>
+        <div class="download">
+            <div class="downloadtitle">
+                download
+            </div>
+            <div class="downcopy">
+                <span>Copy the css below and paste it in your project</span>
+                <textarea onclick="this.focus();this.select()" readonly="readonly"></textarea>
+            </div>
+            <div class="downcopy">
+                <span>Copy the javascript below and paste it in your project</span>
+                <textarea onclick="this.focus();this.select()" readonly="readonly">
+                    $(document).ready(function () {
+                    if ($('.scfFileUploadBorder').length) {
+                    $(".scfFileUpload").change(function () {
+                    var fileName = this.files.length > 0 ? this.files[0].name : '';
+                    $(this).next().show().find('.value').remove();
+                    if (fileName.length > 0) {
+                    var htmlindezevar = '' + fileName + ' ';
+                    $(this).next().css('display', 'block').html(htmlindezevar);
+                    }
+                    });
+                    }
+                    });
+
+                    $(document).ready(function () {
+                    $(".scfSectionContent > div > div input, .scfSectionContent > div > div textarea, .scfSectionContent > div > div select").each(function () {
+                    if ($(this).val() == '') {
+                    $(this).parent().parent().addClass('pristine');
+                    }
+                    });
+                    });
+
+                    if (jQuery(document).on === undefined) {
+                    // jQuery 1.3+
+                    $(".fadinglabels input, .fadinglabels textarea, .scfSectionContent > div > div input, .scfSectionContent > div > div textarea, .scfSectionContent > div > div select, .scfConfirmPasswordGeneralPanel input").live("focus", function () {
+                    $(this).parent().parent().removeClass('pristine');
+                    });
+                    $(".fadinglabels input, .fadinglabels textarea, .scfSectionContent > div > div input, .scfSectionContent > div > div textarea, .scfSectionContent > div > div select, .scfConfirmPasswordGeneralPanel input").live("blur", function () {
+                    if ($(this).val() === "") {
+                    $(this).parent().parent().addClass('pristine');
+                    } else {
+                    $(this).parent().parent().removeClass('pristine');
+                    }
+                    });
+                    }
+                    else {
+                    // jQuery 1.7+
+                    $(document).on("focus", ".fadinglabels input, .fadinglabels textarea, .scfSectionContent > div > div input, .scfSectionContent > div > div textarea, .scfSectionContent > div > div select, .scfConfirmPasswordGeneralPanel input", function () {
+                    $(this).parent().parent().removeClass('pristine');
+                    });
+                    $(document).on("blur", ".fadinglabels input, .fadinglabels textarea, .scfSectionContent > div > div input, .scfSectionContent > div > div textarea, .scfSectionContent > div > div select, .scfConfirmPasswordGeneralPanel input", function () {
+                    if ($(this).val() === "") {
+                    $(this).parent().parent().addClass('pristine');
+                    } else {
+                    $(this).parent().parent().removeClass('pristine');
+                    }
+                    });
+                    }
+                </textarea>
+                <a href="/js/wffm.js" download="wffm.js"><i class="fa fa-download"></i>  or download it as a file</a>
+            </div>
+
+
+
+            <!--<a href="/"><i class="fa fa-download"></i>  package</a>, <a href="/"><i class="fa fa-download"></i>  css</a>,-->
+
+        </div>
+
+    </div>
+
+
+    <div class="demoPane">
+        <button>2<br />. <br />P<br />r<br />e<br />v<br />i<br />e<br />w<br />&nbsp;<br /><i class="fa fa-refresh"></i> </button>
+
+        <div class="showcase">
+
+            <div class="explain">
+                The example below is just a static example(no javascript) with your current variables.<br />
+                So no captcha, errors and fileupload<br />
+                &nbsp;<br />
+                <span class="downloadtitle">
+                    Preview
+                </span> :
+
+            </div>
+
+            <div class="scroller">
+
+
+
+                <div class="scfForm" id="form_56466E83A1CA416D866EC7D8F50BE2D4">
+                    <h1 class="scfTitleBorder">
+                        Demo form
+                    </h1>
+                    <div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4__summary" class="scfValidationSummary" style="color:Red;"><ul><li>Name must be filled in.</li><li>Comment must be filled in.</li><li>The text you typed does not match the characters shown in the box. Try again or click refresh to display a different set of characters.</li></ul></div>
+                    <div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4__submitSummary" class="scfSubmitSummary" style="color:Red;"></div><div onkeypress="javascript:return WebForm_FireDefaultButton(event, 'content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_form_56466E83A1CA416D866EC7D8F50BE2D4_submit')">
+                        <div>
+                            <fieldset class="scfSectionBorderAsFieldSet">
+                                <legend class="scfSectionLegend">
+                                    Your Personal data
+                                </legend><div class="scfSectionContent"><div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_8039C2992E5D42328D485A15FA4ABA58scope" class="scfDropListBorder fieldid.%7b8039C299-2E5D-4232-8D48-5A15FA4ABA58%7d name.Gender"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_8039C2992E5D42328D485A15FA4ABA58" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_8039C2992E5D42328D485A15FA4ABA58text" class="scfDropListLabel">Gender</label><div class="scfDropListGeneralPanel"><select name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_8039C2992E5D42328D485A15FA4ABA58" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_8039C2992E5D42328D485A15FA4ABA58" class="scfDropList"><option value=""></option><option value="Male">Male</option><option value="Female">Female</option><option value="New list item">New list item</option></select><span class="scfDropListUsefulInfo" style="display:none;"></span></div></div><div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_078ED0C89EE14D1BAD106AB9BB67D340_scope" class="scfSingleLineTextBorder fieldid.%7b078ED0C8-9EE1-4D1B-AD10-6AB9BB67D340%7d name.Last+name"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_078ED0C89EE14D1BAD106AB9BB67D340" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_078ED0C89EE14D1BAD106AB9BB67D340_text" class="scfSingleLineTextLabel">Name</label><div class="scfSingleLineGeneralPanel"><input name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_078ED0C89EE14D1BAD106AB9BB67D340" maxlength="256" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_078ED0C89EE14D1BAD106AB9BB67D340" class="scfSingleLineTextBox" type="text"><span class="scfSingleLineTextUsefulInfo" style="display:none;"></span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_078ED0C89EE14D1BAD106AB9BB67D3406ADFFAE3DADB451AB530D89A2FD0307B_validator" class="scfValidator trackevent.%7bF3D7B20C-675C-4707-84CC-5E5B4481B0EE%7d fieldid.%7b078ED0C8-9EE1-4D1B-AD10-6AB9BB67D340%7d inner.1" style="color:Red;display:none;">Name must have at least 0 and no more than 256 characters.</span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_078ED0C89EE14D1BAD106AB9BB67D340070FCA141E9A45D78611EA650F20FE77_validator" class="scfValidator trackevent.%7b844BBD40-91F6-42CE-8823-5EA4D089ECA2%7d fieldid.%7b078ED0C8-9EE1-4D1B-AD10-6AB9BB67D340%7d inner.1" style="color:Red;display:none;">The value of the Name field is not valid.</span></div><span class="scfRequired">*</span></div><div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F6BBFEC6496D4897A5E00AD2E836C3C7_scope" class="scfEmailBorder fieldid.%7bF6BBFEC6-496D-4897-A5E0-0AD2E836C3C7%7d name.Email"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F6BBFEC6496D4897A5E00AD2E836C3C7" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F6BBFEC6496D4897A5E00AD2E836C3C7_text" class="scfEmailLabel">Email</label><div class="scfEmailGeneralPanel"><input name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_F6BBFEC6496D4897A5E00AD2E836C3C7" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F6BBFEC6496D4897A5E00AD2E836C3C7" class="scfEmailTextBox" type="text"><span class="scfEmailUsefulInfo" style="display:none;"></span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F6BBFEC6496D4897A5E00AD2E836C3C75D10AF7533054C39908EB25E8CB4ABDC_validator" class="scfValidator trackevent.%7b844BBD40-91F6-42CE-8823-5EA4D089ECA2%7d fieldid.%7bF6BBFEC6-496D-4897-A5E0-0AD2E836C3C7%7d inner.1" style="color: Red; display: none;">Enter a valid e-mail address.</span></div><span class="scfRequired">*</span></div><div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_48A4F41ECF414107A7959572A43B0F67_scope" class="scfPasswordBorder fieldid.%7b48A4F41E-CF41-4107-A795-9572A43B0F67%7d name.password predefinedValidator.DBAE2DECD3914C41975963F3E68DDB22 regex.%5e%5ba-zA-Z%5cs%5d*%24"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_48A4F41ECF414107A7959572A43B0F67" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_48A4F41ECF414107A7959572A43B0F67_text" class="scfPasswordLabel">password</label><div class="scfPasswordGeneralPanel"><input name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_48A4F41ECF414107A7959572A43B0F67" maxlength="256" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_48A4F41ECF414107A7959572A43B0F67" class="scfPasswordTextBox" type="password"><span class="scfPasswordUsefulInfo">Provide a password containing  an uppercase letter and a number. </span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_48A4F41ECF414107A7959572A43B0F676ADFFAE3DADB451AB530D89A2FD0307B_validator" class="scfValidator trackevent.%7bF3D7B20C-675C-4707-84CC-5E5B4481B0EE%7d fieldid.%7b48A4F41E-CF41-4107-A795-9572A43B0F67%7d inner.1" style="color:Red;display:none;">password must have at least 0 and no more than 256 characters.</span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_48A4F41ECF414107A7959572A43B0F67070FCA141E9A45D78611EA650F20FE77_validator" class="scfValidator trackevent.%7b844BBD40-91F6-42CE-8823-5EA4D089ECA2%7d fieldid.%7b48A4F41E-CF41-4107-A795-9572A43B0F67%7d inner.1" style="color:Red;display:none;">The value of the password field is not valid.</span></div></div><div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_8A4942CDA2084132970443817F63D206_scope" class="scfNumberBorder fieldid.%7b8A4942CD-A208-4132-9704-43817F63D206%7d name.Number"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_8A4942CDA2084132970443817F63D206" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_8A4942CDA2084132970443817F63D206_text" class="scfNumberLabel">Number</label><div class="scfNumberGeneralPanel"><input name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_8A4942CDA2084132970443817F63D206" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_8A4942CDA2084132970443817F63D206" class="scfNumberTextBox" type="text"><span class="scfNumberUsefulInfo" style="display:none;"></span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_8A4942CDA2084132970443817F63D2061314218A8FF1480BA29A1C5A9DE4E1DE_validator" class="scfValidator trackevent.%7b844BBD40-91F6-42CE-8823-5EA4D089ECA2%7d fieldid.%7b8A4942CD-A208-4132-9704-43817F63D206%7d inner.1" style="color:Red;display:none;">Enter a number.</span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_8A4942CDA2084132970443817F63D206522778A59B4D440FA5B975910CC55428_validator" class="minimum.0 maximum.2.147484E%2b09 scfValidator trackevent.%7bF3D7B20C-675C-4707-84CC-5E5B4481B0EE%7d fieldid.%7b8A4942CD-A208-4132-9704-43817F63D206%7d inner.1" style="color:Red;display:none;">The number in Number must be at least 0 and no more than 2.147484E+09.</span></div></div><div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_99ED6DC43DF14A82B01671287CE0CF48" class="scfDateSelectorBorder DateFormat.dd-MMM-yyyy startDate.20000101T120000 endDate.20161015T000000 fieldid.%7b99ED6DC4-3DF1-4A82-B016-71287CE0CF48%7d name.Date"><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_99ED6DC43DF14A82B01671287CE0CF48_text" class="scfDateSelectorLabel">Date</span><div class="scfDateSelectorGeneralPanel"><input name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_99ED6DC43DF14A82B01671287CE0CF48_complexvalue" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_99ED6DC43DF14A82B01671287CE0CF48_complexvalue" value="20141104T000000" type="hidden"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_99ED6DC43DF14A82B01671287CE0CF48_day" class="scfDateSelectorShortLabelDay">Day</label><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_99ED6DC43DF14A82B01671287CE0CF48_month" class="scfDateSelectorShortLabelMonth">Month</label><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_99ED6DC43DF14A82B01671287CE0CF48_year" class="scfDateSelectorShortLabelYear">Year</label><select name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_99ED6DC43DF14A82B01671287CE0CF48_day" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_99ED6DC43DF14A82B01671287CE0CF48_day" class="scfDateSelectorDay" onclick="javascript:return $scw.webform.controls.updateDateSelector(this);"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option selected="selected" value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option></select><select name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_99ED6DC43DF14A82B01671287CE0CF48_month" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_99ED6DC43DF14A82B01671287CE0CF48_month" class="scfDateSelectorMonth" onclick="javascript:return $scw.webform.controls.updateDateSelector(this);"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option selected="selected" value="11">Nov</option><option value="12">Dec</option></select><select name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_99ED6DC43DF14A82B01671287CE0CF48_year" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_99ED6DC43DF14A82B01671287CE0CF48_year" class="scfDateSelectorYear" onclick="javascript:return $scw.webform.controls.updateDateSelector(this);"><option value="2000">2000</option><option value="2001">2001</option><option value="2002">2002</option><option value="2003">2003</option><option value="2004">2004</option><option value="2005">2005</option><option value="2006">2006</option><option value="2007">2007</option><option value="2008">2008</option><option value="2009">2009</option><option value="2010">2010</option><option value="2011">2011</option><option value="2012">2012</option><option value="2013">2013</option><option selected="selected" value="2014">2014</option><option value="2015">2015</option><option value="2016">2016</option></select><span class="scfDateSelectorUsefulInfo" style="display:none;"></span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_99ED6DC43DF14A82B01671287CE0CF48E1FD76F9111E447085C46006EDEF8134_validator" class="startdate.20000101T120000 enddate.20161015T000000 scfValidator trackevent.%7bF3D7B20C-675C-4707-84CC-5E5B4481B0EE%7d fieldid.%7b99ED6DC4-3DF1-4A82-B016-71287CE0CF48%7d inner.1" style="color:Red;display:none;">Date must be later than Saturday, January 01, 2000 and before Saturday, October 15, 2016.</span></div></div><div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_14B3936D43E940B6BF6049677E3C7EFDscope" class="scfCheckboxBorder fieldid.%7b14B3936D-43E9-40B6-BF60-49677E3C7EFD%7d name.Check+box"><span class="scfCheckbox"><input id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_14B3936D43E940B6BF6049677E3C7EFD" name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_14B3936D43E940B6BF6049677E3C7EFD" type="checkbox"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_14B3936D43E940B6BF6049677E3C7EFD">i agree with this checkbox</label></span><span class="scfCheckboxUsefulInfo" style="display:none;"></span></div><div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_0909971DD4434DD383A50AD5FD19BE30scope" class="scfFileUploadBorder fieldid.%7b0909971D-D443-4DD3-83A5-0AD5FD19BE30%7d name.Upload+file"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_0909971DD4434DD383A50AD5FD19BE30" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_0909971DD4434DD383A50AD5FD19BE30text" class="scfFileUploadLabel">Upload file</label><div class="scfFileUploadGeneralPanel"><input name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_0909971DD4434DD383A50AD5FD19BE30" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_0909971DD4434DD383A50AD5FD19BE30" class="scfFileUpload" type="file"><span class="scfFileUploadUsefulInfo" style=""><span class="value">55687.jpg </span></span></div></div></div>
+                            </fieldset>
+                        </div><div class="scfSectionBorder">
+                            <fieldset class="scfSectionBorderAsFieldSet">
+                                <legend class="scfSectionLegend">
+                                    Your comment
+                                </legend><div class="scfSectionContent">
+                                    <div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_43B3EBFF9DE2443E8AE3BEF0C6B12F6B_scope" class="halfAvailableWidth fieldid.%7b43B3EBFF-9DE2-443E-8AE3-BEF0C6B12F6B%7d name.Subject2"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_43B3EBFF9DE2443E8AE3BEF0C6B12F6B" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_43B3EBFF9DE2443E8AE3BEF0C6B12F6B_text" class="scfSingleLineTextLabel">Subject</label><div class="scfSingleLineGeneralPanel"><input name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_43B3EBFF9DE2443E8AE3BEF0C6B12F6B" maxlength="256" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_43B3EBFF9DE2443E8AE3BEF0C6B12F6B" class="scfSingleLineTextBox" type="text"><span class="scfSingleLineTextUsefulInfo" style="display:none;"></span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_43B3EBFF9DE2443E8AE3BEF0C6B12F6B6ADFFAE3DADB451AB530D89A2FD0307B_validator" class="scfValidator trackevent.%7bF3D7B20C-675C-4707-84CC-5E5B4481B0EE%7d fieldid.%7b43B3EBFF-9DE2-443E-8AE3-BEF0C6B12F6B%7d inner.1" style="color:Red;display:none;">Subject must have at least 0 and no more than 256 characters.</span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_43B3EBFF9DE2443E8AE3BEF0C6B12F6B070FCA141E9A45D78611EA650F20FE77_validator" class="scfValidator trackevent.%7b844BBD40-91F6-42CE-8823-5EA4D089ECA2%7d fieldid.%7b43B3EBFF-9DE2-443E-8AE3-BEF0C6B12F6B%7d inner.1" style="color:Red;display:none;">The value of the Subject field is not valid.</span></div></div>
+                                    <div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_43B3EBFF9DE2443E8AE3BEF0C6B12F6B_scope" class="halfAvailableWidth fieldid.%7b43B3EBFF-9DE2-443E-8AE3-BEF0C6B12F6B%7d name.Subject2"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_43B3EBFF9DE2443E8AE3BEF0C6B12F6B" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_43B3EBFF9DE2443E8AE3BEF0C6B12F6B_text" class="scfSingleLineTextLabel">Subject</label><div class="scfSingleLineGeneralPanel"><input name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_43B3EBFF9DE2443E8AE3BEF0C6B12F6B" maxlength="256" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_43B3EBFF9DE2443E8AE3BEF0C6B12F6B" class="scfSingleLineTextBox" type="text"><span class="scfSingleLineTextUsefulInfo" style="display:none;"></span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_43B3EBFF9DE2443E8AE3BEF0C6B12F6B6ADFFAE3DADB451AB530D89A2FD0307B_validator" class="scfValidator trackevent.%7bF3D7B20C-675C-4707-84CC-5E5B4481B0EE%7d fieldid.%7b43B3EBFF-9DE2-443E-8AE3-BEF0C6B12F6B%7d inner.1" style="color:Red;display:none;">Subject must have at least 0 and no more than 256 characters.</span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_43B3EBFF9DE2443E8AE3BEF0C6B12F6B070FCA141E9A45D78611EA650F20FE77_validator" class="scfValidator trackevent.%7b844BBD40-91F6-42CE-8823-5EA4D089ECA2%7d fieldid.%7b43B3EBFF-9DE2-443E-8AE3-BEF0C6B12F6B%7d inner.1" style="color:Red;display:none;">The value of the Subject field is not valid.</span></div></div><div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_C01139AAAA6940B6B5D25B42ED593DD9_scope" class="scfMultipleLineTextBorder fieldid.%7bC01139AA-AA69-40B6-B5D2-5B42ED593DD9%7d name.Comment"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_C01139AAAA6940B6B5D25B42ED593DD9" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_C01139AAAA6940B6B5D25B42ED593DD9_text" class="scfMultipleLineTextLabel">Comment</label><div class="scfMultipleLineGeneralPanel"><textarea name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_C01139AAAA6940B6B5D25B42ED593DD9" rows="4" cols="20" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_C01139AAAA6940B6B5D25B42ED593DD9" class="scfMultipleLineTextBox"></textarea><span class="scfMultipleLineTextUsefulInfo" style="display:none;"></span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_C01139AAAA6940B6B5D25B42ED593DD96ADFFAE3DADB451AB530D89A2FD0307B_validator" class="scfValidator trackevent.%7bF3D7B20C-675C-4707-84CC-5E5B4481B0EE%7d fieldid.%7bC01139AA-AA69-40B6-B5D2-5B42ED593DD9%7d inner.1" style="color:Red;display:none;">Comment must have at least 0 and no more than 512 characters.</span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_C01139AAAA6940B6B5D25B42ED593DD9070FCA141E9A45D78611EA650F20FE77_validator" class="scfValidator trackevent.%7b844BBD40-91F6-42CE-8823-5EA4D089ECA2%7d fieldid.%7bC01139AA-AA69-40B6-B5D2-5B42ED593DD9%7d inner.1" style="color:Red;display:none;">The value of the Comment field is not valid.</span></div><span class="scfRequired">*</span></div><div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_CC12A21F41354149B39E359ACDEE9B5E_scope" class="thirdAvailableWidth fieldid.%7bCC12A21F-4135-4149-B39E-359ACDEE9B5E%7d name.Subject"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_CC12A21F41354149B39E359ACDEE9B5E" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_CC12A21F41354149B39E359ACDEE9B5E_text" class="scfSingleLineTextLabel">Subject</label><div class="scfSingleLineGeneralPanel"><input name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_CC12A21F41354149B39E359ACDEE9B5E" maxlength="256" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_CC12A21F41354149B39E359ACDEE9B5E" class="scfSingleLineTextBox" type="text"><span class="scfSingleLineTextUsefulInfo" style="display:none;"></span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_CC12A21F41354149B39E359ACDEE9B5E6ADFFAE3DADB451AB530D89A2FD0307B_validator" class="scfValidator trackevent.%7bF3D7B20C-675C-4707-84CC-5E5B4481B0EE%7d fieldid.%7bCC12A21F-4135-4149-B39E-359ACDEE9B5E%7d inner.1" style="color:Red;display:none;">Subject must have at least 0 and no more than 256 characters.</span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_CC12A21F41354149B39E359ACDEE9B5E070FCA141E9A45D78611EA650F20FE77_validator" class="scfValidator trackevent.%7b844BBD40-91F6-42CE-8823-5EA4D089ECA2%7d fieldid.%7bCC12A21F-4135-4149-B39E-359ACDEE9B5E%7d inner.1" style="color:Red;display:none;">The value of the Subject field is not valid.</span></div></div><div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_FA0F781E27EF446F99343C7C8B98BF6E_scope" class="thirdAvailableWidth fieldid.%7bFA0F781E-27EF-446F-9934-3C7C8B98BF6E%7d name.Subject"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_FA0F781E27EF446F99343C7C8B98BF6E" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_FA0F781E27EF446F99343C7C8B98BF6E_text" class="scfSingleLineTextLabel">Subject</label><div class="scfSingleLineGeneralPanel"><input name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_FA0F781E27EF446F99343C7C8B98BF6E" maxlength="256" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_FA0F781E27EF446F99343C7C8B98BF6E" class="scfSingleLineTextBox" type="text"><span class="scfSingleLineTextUsefulInfo" style="display:none;"></span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_FA0F781E27EF446F99343C7C8B98BF6E6ADFFAE3DADB451AB530D89A2FD0307B_validator" class="scfValidator trackevent.%7bF3D7B20C-675C-4707-84CC-5E5B4481B0EE%7d fieldid.%7bFA0F781E-27EF-446F-9934-3C7C8B98BF6E%7d inner.1" style="color:Red;display:none;">Subject must have at least 0 and no more than 256 characters.</span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_FA0F781E27EF446F99343C7C8B98BF6E070FCA141E9A45D78611EA650F20FE77_validator" class="scfValidator trackevent.%7b844BBD40-91F6-42CE-8823-5EA4D089ECA2%7d fieldid.%7bFA0F781E-27EF-446F-9934-3C7C8B98BF6E%7d inner.1" style="color:Red;display:none;">The value of the Subject field is not valid.</span></div></div><div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_6E79798724F24D67BABE32AF2D194FF2_scope" class="thirdAvailableWidth fieldid.%7b6E797987-24F2-4D67-BABE-32AF2D194FF2%7d name.Subject"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_6E79798724F24D67BABE32AF2D194FF2" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_6E79798724F24D67BABE32AF2D194FF2_text" class="scfSingleLineTextLabel">Subject</label><div class="scfSingleLineGeneralPanel"><input name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_6E79798724F24D67BABE32AF2D194FF2" maxlength="256" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_6E79798724F24D67BABE32AF2D194FF2" class="scfSingleLineTextBox" type="text"><span class="scfSingleLineTextUsefulInfo" style="display:none;"></span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_6E79798724F24D67BABE32AF2D194FF26ADFFAE3DADB451AB530D89A2FD0307B_validator" class="scfValidator trackevent.%7bF3D7B20C-675C-4707-84CC-5E5B4481B0EE%7d fieldid.%7b6E797987-24F2-4D67-BABE-32AF2D194FF2%7d inner.1" style="color:Red;display:none;">Subject must have at least 0 and no more than 256 characters.</span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_6E79798724F24D67BABE32AF2D194FF2070FCA141E9A45D78611EA650F20FE77_validator" class="scfValidator trackevent.%7b844BBD40-91F6-42CE-8823-5EA4D089ECA2%7d fieldid.%7b6E797987-24F2-4D67-BABE-32AF2D194FF2%7d inner.1" style="color:Red;display:none;">The value of the Subject field is not valid.</span></div></div><div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_982DF3DBBFCD42358A2061A2739B0F5C_scope" class="scfShortText fieldid.%7b982DF3DB-BFCD-4235-8A20-61A2739B0F5C%7d name.Short+text"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_982DF3DBBFCD42358A2061A2739B0F5C" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_982DF3DBBFCD42358A2061A2739B0F5C_text" class="scfSingleLineTextLabel">Short text</label><div class="scfSingleLineGeneralPanel"><input name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_982DF3DBBFCD42358A2061A2739B0F5C" maxlength="256" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_982DF3DBBFCD42358A2061A2739B0F5C" class="scfSingleLineTextBox" type="text"><span class="scfSingleLineTextUsefulInfo">this is a short text field. The helptip is placed next to it</span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_982DF3DBBFCD42358A2061A2739B0F5C6ADFFAE3DADB451AB530D89A2FD0307B_validator" class="scfValidator trackevent.%7bF3D7B20C-675C-4707-84CC-5E5B4481B0EE%7d fieldid.%7b982DF3DB-BFCD-4235-8A20-61A2739B0F5C%7d inner.1" style="color:Red;display:none;">Short text must have at least 0 and no more than 256 characters.</span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_982DF3DBBFCD42358A2061A2739B0F5C070FCA141E9A45D78611EA650F20FE77_validator" class="scfValidator trackevent.%7b844BBD40-91F6-42CE-8823-5EA4D089ECA2%7d fieldid.%7b982DF3DB-BFCD-4235-8A20-61A2739B0F5C%7d inner.1" style="color:Red;display:none;">The value of the Short text field is not valid.</span></div></div>
+                                </div>
+                            </fieldset>
+                        </div><div class="halfSection">
+                            <fieldset class="scfSectionBorderAsFieldSet">
+                                <legend class="scfSectionLegend">
+                                    half section
+                                </legend><div class="scfSectionContent">
+                                    <div class="scfPasswordConfirmation fieldid.%7bF7AF0A88-2F75-43ED-8A2A-D14642867DA9%7d name.Password+confirmation validationgroup.form_56466E83A1CA416D866EC7D8F50BE2D4_submit" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F7AF0A882F7543ED8A2AD14642867DA9border">
+                                        <div>
+                                            <div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F7AF0A882F7543ED8A2AD14642867DA9border_passwordBorder" class="scfConfirmPasswordBorder">
+                                                <label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F7AF0A882F7543ED8A2AD14642867DA9border_field_F7AF0A882F7543ED8A2AD14642867DA9" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F7AF0A882F7543ED8A2AD14642867DA9border_passwordTitle" class="scfConfirmPasswordLabel">Password</label><div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F7AF0A882F7543ED8A2AD14642867DA9border_passwordPanel" class="scfConfirmPasswordGeneralPanel">
+                                                    <input name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_F7AF0A882F7543ED8A2AD14642867DA9border$field_F7AF0A882F7543ED8A2AD14642867DA9" maxlength="256" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F7AF0A882F7543ED8A2AD14642867DA9border_field_F7AF0A882F7543ED8A2AD14642867DA9" class="scfConfirmPasswordTextBox password.1 fieldid.{F7AF0A88-2F75-43ED-8A2A-D14642867DA9}/{953A6FD7-CF54-4895-9CD4-39804961A776}" type="password"><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F7AF0A882F7543ED8A2AD14642867DA9border_passwordHelp" class="scfConfirmPasswordUsefulInfo" style="display:none;"></span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F7AF0A882F7543ED8A2AD14642867DA9border_field_F7AF0A882F7543ED8A2AD14642867DA966D1164796C44B8BB5719F9C91AE6760_validator" class="scfValidator trackevent.%7b844BBD40-91F6-42CE-8823-5EA4D089ECA2%7d fieldid.%7bF7AF0A88-2F75-43ED-8A2A-D14642867DA9%7d confirmationControlId.confirmation inner.1" style="color:Red;display:none;"></span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F7AF0A882F7543ED8A2AD14642867DA9border_field_F7AF0A882F7543ED8A2AD14642867DA96ADFFAE3DADB451AB530D89A2FD0307B_validator" class="scfValidator trackevent.%7bF3D7B20C-675C-4707-84CC-5E5B4481B0EE%7d fieldid.%7bF7AF0A88-2F75-43ED-8A2A-D14642867DA9%7d confirmationControlId.confirmation inner.1 fieldid.{F7AF0A88-2F75-43ED-8A2A-D14642867DA9}" style="color:Red;display:none;">Password must have at least 0 and no more than 256 characters.</span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F7AF0A882F7543ED8A2AD14642867DA9border_field_F7AF0A882F7543ED8A2AD14642867DA9070FCA141E9A45D78611EA650F20FE77_validator" class="scfValidator trackevent.%7b844BBD40-91F6-42CE-8823-5EA4D089ECA2%7d fieldid.%7bF7AF0A88-2F75-43ED-8A2A-D14642867DA9%7d confirmationControlId.confirmation inner.1 fieldid.{F7AF0A88-2F75-43ED-8A2A-D14642867DA9}" style="color:Red;display:none;">The value of the Password field is not valid.</span>
+                                                </div>
+                                            </div>
+                                        </div><div>
+                                            <div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F7AF0A882F7543ED8A2AD14642867DA9border_confirmationBorder" class="scfConfirmPasswordBorder">
+                                                <label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F7AF0A882F7543ED8A2AD14642867DA9border_confirmation" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F7AF0A882F7543ED8A2AD14642867DA9border_confirmationTitle" class="scfConfirmPasswordLabel">Confirm Password</label><div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F7AF0A882F7543ED8A2AD14642867DA9border_confirmationPanel" class="scfConfirmPasswordGeneralPanel">
+                                                    <input name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_F7AF0A882F7543ED8A2AD14642867DA9border$confirmation" maxlength="256" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F7AF0A882F7543ED8A2AD14642867DA9border_confirmation" class="scfConfirmPasswordTextBox confirmation.1 fieldid.{F7AF0A88-2F75-43ED-8A2A-D14642867DA9}/{A47F22B9-C1E8-41AB-A36E-2A0C634E800B}" type="password"><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F7AF0A882F7543ED8A2AD14642867DA9border_confimationHelp" class="scfConfirmPasswordUsefulInfo" style="display:none;"></span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_F7AF0A882F7543ED8A2AD14642867DA9border_field_F7AF0A882F7543ED8A2AD14642867DA96ADFFAE3DADB451AB530D89A2FD0307B_validatorconfirmation" class="scfValidator trackevent.%7bF3D7B20C-675C-4707-84CC-5E5B4481B0EE%7d fieldid.%7bF7AF0A88-2F75-43ED-8A2A-D14642867DA9%7d fieldid.{F7AF0A88-2F75-43ED-8A2A-D14642867DA9}" inner="1" style="display:none;">Confirm Password must have at least 0 and no more than 256 characters.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_D399B2522370401EB03CC1B5E314B79F" class="scfCheckBoxListBorder fieldid.%7bD399B252-2370-401E-B03C-C1B5E314B79F%7d name.Check+Box+List"><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_D399B2522370401EB03CC1B5E314B79Ftext" class="scfCheckBoxListLabel">Check Box List</span><div class="scfCheckBoxListGeneralPanel"><table id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_D399B2522370401EB03CC1B5E314B79Flist" class="scfCheckBoxList" border="0"><tbody><tr><td><input id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_D399B2522370401EB03CC1B5E314B79Flist_0" name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_D399B2522370401EB03CC1B5E314B79Flist$0" type="checkbox"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_D399B2522370401EB03CC1B5E314B79Flist_0">List item 1</label></td></tr><tr><td><input id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_D399B2522370401EB03CC1B5E314B79Flist_1" name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_D399B2522370401EB03CC1B5E314B79Flist$1" type="checkbox"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_D399B2522370401EB03CC1B5E314B79Flist_1">List item 2</label></td></tr><tr><td><input id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_D399B2522370401EB03CC1B5E314B79Flist_2" name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_D399B2522370401EB03CC1B5E314B79Flist$2" type="checkbox"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_D399B2522370401EB03CC1B5E314B79Flist_2">List item 3</label></td></tr></tbody></table><span class="scfCheckBoxListUsefulInfo" style="display:none;"></span></div></div>
+                                </div>
+                            </fieldset>
+                        </div><div class="halfSection">
+                            <fieldset class="scfSectionBorderAsFieldSet">
+                                <legend class="scfSectionLegend">
+                                    half section
+                                </legend><div class="scfSectionContent"><div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_A83E6D4FF19E4354AC825CF711553EF0_scope" class="scfSmsTelephoneBorder fieldid.%7bA83E6D4F-F19E-4354-AC82-5CF711553EF0%7d name.SMSMMS"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_A83E6D4FF19E4354AC825CF711553EF0" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_A83E6D4FF19E4354AC825CF711553EF0_text" class="scfSmsTelephoneLabel">SMS/MMS</label><div class="scfSmsTelephoneGeneralPanel"><input name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_A83E6D4FF19E4354AC825CF711553EF0" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_A83E6D4FF19E4354AC825CF711553EF0" class="scfSmsTelephoneTextBox" type="text"><span class="scfSmsTelephoneUsefulInfo" style="display:none;"></span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_A83E6D4FF19E4354AC825CF711553EF07CF90955844349B091D3E5D47B411F24_validator" class="scfValidator trackevent.%7b844BBD40-91F6-42CE-8823-5EA4D089ECA2%7d fieldid.%7bA83E6D4F-F19E-4354-AC82-5CF711553EF0%7d inner.1" style="color:Red;display:none;">Enter a valid sms/mms telephone number.</span></div></div><div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_6A4D08B6A0CA41B48AD2FF4C37A7036F_scope" class="scfTelephoneBorder fieldid.%7b6A4D08B6-A0CA-41B4-8AD2-FF4C37A7036F%7d name.Telephone"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_6A4D08B6A0CA41B48AD2FF4C37A7036F" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_6A4D08B6A0CA41B48AD2FF4C37A7036F_text" class="scfTelephoneLabel">Telephone</label><div class="scfTelephoneGeneralPanel"><input name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_6A4D08B6A0CA41B48AD2FF4C37A7036F" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_6A4D08B6A0CA41B48AD2FF4C37A7036F" class="scfTelephoneTextBox" type="text"><span class="scfTelephoneUsefulInfo" style="display:none;"></span><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_6A4D08B6A0CA41B48AD2FF4C37A7036FC3CC8A327EF14D138163826E11482E4D_validator" class="scfValidator trackevent.%7b844BBD40-91F6-42CE-8823-5EA4D089ECA2%7d fieldid.%7b6A4D08B6-A0CA-41B4-8AD2-FF4C37A7036F%7d inner.1" style="color:Red;display:none;">Enter a valid telephone number.</span></div></div><div id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_2BDE480939A9453F9EA0445C11547B13" class="scfRadioButtonListBorder fieldid.%7b2BDE4809-39A9-453F-9EA0-445C11547B13%7d name.Radio+button+list"><span id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_2BDE480939A9453F9EA0445C11547B13text" class="scfRadioButtonListLabel">Radio button list</span><div class="scfRadioButtonListGeneralPanel"><table id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_2BDE480939A9453F9EA0445C11547B13scope" class="scfRadioButtonList" border="0"><tbody><tr><td><input id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_2BDE480939A9453F9EA0445C11547B13scope_0" name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_2BDE480939A9453F9EA0445C11547B13scope" value="value 1" type="radio"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_2BDE480939A9453F9EA0445C11547B13scope_0">value 1</label></td></tr><tr><td><input id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_2BDE480939A9453F9EA0445C11547B13scope_1" name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_2BDE480939A9453F9EA0445C11547B13scope" value="value 2" type="radio"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_2BDE480939A9453F9EA0445C11547B13scope_1">value 2</label></td></tr><tr><td><input id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_2BDE480939A9453F9EA0445C11547B13scope_2" name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$field_2BDE480939A9453F9EA0445C11547B13scope" value="value 3" type="radio"><label for="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_field_2BDE480939A9453F9EA0445C11547B13scope_2">value 3</label></td></tr></tbody></table><span class="scfRadioButtonListUsefulInfo" style="display:none;"></span></div></div></div>
+                            </fieldset>
+                        </div>
+                    </div><div class="scfFooterBorder"></div><div><input name="content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$form_56466E83A1CA416D866EC7D8F50BE2D4_submit" value="Submit" onclick="$scw.webform.lastSubmit = this.id;WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;content_0$form_56466E83A1CA416D866EC7D8F50BE2D4$form_56466E83A1CA416D866EC7D8F50BE2D4_submit&quot;, &quot;&quot;, true, &quot;form_56466E83A1CA416D866EC7D8F50BE2D4_submit&quot;, &quot;&quot;, false, false));$scw.webform.validators.setFocusToFirstNotValid('form_56466E83A1CA416D866EC7D8F50BE2D4_submit')" id="content_0_form_56466E83A1CA416D866EC7D8F50BE2D4_form_56466E83A1CA416D866EC7D8F50BE2D4_submit" type="submit"></div>
+                </div>
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+
+
+
+
+
+
+

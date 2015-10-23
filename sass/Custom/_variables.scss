@@ -1,0 +1,139 @@
+
+
+
+    // ===============================================
+//   Variables 
+// ===============================================
+
+// 1. IMPORTANT SETUP ----------------------------
+
+    // if you want to use the Nice-Input-Elements (NIE) only for WFFM, make the following variable 'true'. If you want to use the formelement-styling outside WFFM, set it to false. 
+    $useOnlyForWFFM: false; // 'true' or 'false'.
+
+    // Remove outline for :focus and :active
+    $removeOutline: onlyForWFFM; // 'forWholeSite', 'onlyForWFFM', 'no'.
+
+
+    // breakpoints, needed for responsive design.
+    $useBreakpoints: true; // true or false
+    $WFFMrespond-mobile-end: 600px; 
+    $WFFMrespond-tablet-end: 980px;  //not used
+
+
+  
+// 2. GLOBAL LAYOUT   ----------------------------
+
+    // A. WFFM base-styles.
+    $scfForm-BgColor: inherit; 
+    $scfForm-TextColor: inherit;
+    $scfForm-fontsize:inherit;
+    $scfForm-lineheight:inherit;
+    $scfForm-fontfamily:inherit; 
+
+
+    // B. Titles in WFFM 
+        // H1 of the WFFM
+        $scfTitleBorder-fontfamily: inherit;
+        $scfTitleBorder-color: #000;
+        $scfTitleBorder-font-size: 30px;
+        $scfTitleBorder-font-weight: 400; 
+        $scfTitleBorder-lineheight: 1em; 
+        $scfTitleBorder-textMarginBottom: 10px;
+        // legend of the WFFM
+        $scfSectionLegend-fontfamily: inherit; 
+        $scfSectionLegend-color: #18783a;
+        $scfSectionLegend-font-size: 24px;
+        $scfSectionLegend-font-weight: 400; 
+        $scfSectionLegend-lineheight: 1em; 
+        $scfSectionLegend-textMarginBottom: 10px;
+
+
+    // C. the sections 
+    $scfSectionContent-marginbottom: 25px; // vertical space between two fields, and double for sections. 
+    $scfSectionContent-spacingBetweenDividedInputBoxes: 20px; 
+    $scfSectionContent-maxwidth: 1600px;
+
+
+    // D. Buttons in WFFM
+    $WFFMbutton-borderradius: 4px ;
+    $WFFMbutton-minheight: 40px ;
+    $WFFMbutton-fontsize: $scfForm-fontsize;
+    $WFFMbutton-fontweight: 400;
+        // submit button at bottom of the form
+        $WFFMbuttonSubmit-padding: 7px 20px ; 
+        $WFFMbuttonSubmit-border: 0 none ; 
+        $WFFMbuttonSubmit-BgColor: #0E718C ; 
+        $WFFMbuttonSubmit-textColor: #fff ; 
+        $WFFMbuttonSubmit-BgColor-hover: #0C7996 ; 
+        $WFFMbuttonSubmit-textColor-hover: #fff ; 
+        $WFFMbuttonSubmit-fontfamily: $scfForm-fontfamily;
+        $WFFMbuttonSubmit-textalign: center; // center, right, fullwidth
+        // file upload button 
+        $WFFMbuttonUpload-padding: 12px 20px ; 
+        $WFFMbuttonUpload-border: 0 none ; 
+        $WFFMbuttonUpload-BgColor: #0E718C ; 
+        $WFFMbuttonUpload-textColor: #fff ; 
+        $WFFMbuttonUpload-BgColor-hover: #0C7996 ; 
+        $WFFMbuttonUpload-textColor-hover: #fff ; 
+        $WFFMbuttonUpload-fontfamily: $scfForm-fontfamily;
+        $NIE-fileinputbtn-height: 40px;
+        $WFFMbuttonUpload-lineheight: 1.2em; 
+
+// 3. NICE INPUT ELEMENTS (form elements) --------
+// this is the styling for the labels ans input elements
+    // Styling of the input/select/textarea
+    $NIE-bordercolor: #0E718C;  
+    $NIE-textcolor : #111; 
+    $NIE-bordersize: 1px;
+    $NIE-background: #F1F7F9 ; 
+    $NIE-backgroundFocused: #fff;
+    $NIE-disabled-textcolor: #999; 
+    $NIE-borderradius: 5px;
+    $NIE-padding: 7px 14px;
+    $NIE-width: 100%;
+    $NIE-height: 40px;
+    $NIE-textareaHeight: 100px;
+
+    // Styling of the label
+    $NIE-label-fontfamily: inherit;
+    $NIE-label-color: #0C7996;
+    $NIE-label-fontsize: inherit;
+    $NIE-label-fontweight: inherit; 
+    $NIE-label-padding: 3px; 
+    $NIE-label-padding-forradioandcheckboxes: 3px 0 0 25px; 
+
+    //Styling of other parts 
+    $NIE-error-color: #ed2324;
+    $NIE-errorinline-padding: 0 10px; 
+    $NIE-tip-color: #888; 
+    $NIE-tip-padding: 2px 10px 0 10px; 
+    $NIE-tip-fontsize: 12px;
+    $NIE-tip-lineheight: 1.2em;
+
+
+    // required-star: * 
+    $NIE-required-color: #888; 
+    $NIE-required-fontsize: 20px; 
+    $NIE-required-top: 0px; // margin above 
+    $NIE-required-right: -10px; 
+
+
+
+
+    // add-ons : 
+    $helptip-showonhover: false; 
+    $helptip-BgColor: #E7EBED;
+
+    //should be combined to 1 var, with multiple values: movinglabels, oldstyle and default
+    $movinglabels: false;
+    $labelsOldStyle: false;
+
+
+
+
+   
+    $NIE-error-margin: 30px 0;
+    $NIE-error-border: 1px; 
+    $NIE-error-borderradius: 4px;
+    $NIE-error-padding: 10px 10px 5px 10px;
+    $NIE-error-bgColor: transparent; 
