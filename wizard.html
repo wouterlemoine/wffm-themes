@@ -4,7 +4,7 @@
     <title>Tool</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link type="text/css" rel="stylesheet" href="css/wizard/wizard.css" />
-    <link type="text/css" rel="stylesheet" href="css/Custom/custom.css" /><!--for the inputform--> 
+    <link type="text/css" rel="stylesheet" href="css/Custom/custom.css" /><!--for the inputform-->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.js"></script>
     <script src="js/jquery.bxslider.min.js"></script>
     <script src="js/jquery.colorbox-min.js"></script>
@@ -15,14 +15,14 @@
     <script src="sass.js-master/dist/sass.js"></script>
     <script>
 
-        var myexternalfileWFFM = ''; 
-        var myexternalfileUtil = ''; 
+        var myexternalfileWFFM = '';
+        var myexternalfileUtil = '';
 
         $( document ).ready(function() {
-        
-           
+
+
             var sass = new Sass();
-            var valueslist = new Object() 
+            var valueslist = new Object()
             $('.InputPane input, .InputPane select').each(function() {
                 valueslist[$(this).attr('id')] = $(this).val()
             });
@@ -32,69 +32,69 @@
                 wffmvars += '$' +  x + ' : ' + valueslist[x] + "; ";
             }
 
-$.when(
-     $.ajax({
-         url: "/sass/WFFM/_wffmStyling.scss", dataType: "text",
-         success: function(data) {
-             myexternalfileWFFM = data;
-            // console.log(myexternalfileWFFM);
-         },
-         error: function() { console.log("oeps _wffmStyling");}
-     }),
-     $.ajax({
-         url: "/sass/WFFM/_utilities.scss", dataType: "text",
-         success: function(data) {
-             myexternalfileUtil = data;
-            // console.log(myexternalfileUtil);
-         },
-         error: function() { console.log("oeps _utilities");}
-     })
- ).then( function(){
-    // console.log('all complete');
-
-
-     
-
-     var mySassVars= wffmvars; 
-     sass.writeFile('_utilities.scss', myexternalfileUtil);
-     sass.writeFile('_variables.scss', mySassVars);
-     sass.writeFile('_wffmStyling.scss', myexternalfileWFFM);
-
-     sass.compile('@import "_utilities"; @import "_variables"; @import "_wffmStyling";', function(result) {
-         //console.log("compiled", result.text);
-         $('.demoPane').prepend('<style>' + result.text+ '</style>'); 
-         $('.download textarea').val(result.text); 
-     });
- });
+            $.when(
+                 $.ajax({
+                     url: "/sass/WFFM/_wffmStyling.scss", dataType: "text",
+                     success: function(data) {
+                         myexternalfileWFFM = data;
+                         // console.log(myexternalfileWFFM);
+                     },
+                     error: function() { console.log("oeps _wffmStyling");}
+                 }),
+                 $.ajax({
+                     url: "/sass/WFFM/_utilities.scss", dataType: "text",
+                     success: function(data) {
+                         myexternalfileUtil = data;
+                         // console.log(myexternalfileUtil);
+                     },
+                     error: function() { console.log("oeps _utilities");}
+                 })
+             ).then( function(){
+                 // console.log('all complete');
 
 
 
-      
-       
+
+                 var mySassVars= wffmvars;
+                 sass.writeFile('_utilities.scss', myexternalfileUtil);
+                 sass.writeFile('_variables.scss', mySassVars);
+                 sass.writeFile('_wffmStyling.scss', myexternalfileWFFM);
+
+                 sass.compile('@import "_utilities"; @import "_variables"; @import "_wffmStyling";', function(result) {
+                     //console.log("compiled", result.text);
+                     $('.demoPane').prepend('<style>' + result.text+ '</style>');
+                     $('.download .copycss textarea').val(result.text);
+                 });
+             });
 
 
-   
-    $(".inputbox  input, .inputbox select").live( "change", function() {
-        $('.demoPane > style').remove();
-        wffmvars = '';
-        $('.InputPane input, .InputPane select').each(function() {
-            valueslist[$(this).attr('id')] = $(this).val()
+
+
+
+
+
+
+            $(".inputbox  input, .inputbox select").live( "change", function() {
+                $('.demoPane > style').remove();
+                wffmvars = '';
+                $('.InputPane input, .InputPane select').each(function() {
+                    valueslist[$(this).attr('id')] = $(this).val()
+                });
+                for (x in valueslist) {
+                    wffmvars += '$' +  x + ' : ' + valueslist[x] + "; ";
+                }
+                console.log(wffmvars);
+                mySassVars= wffmvars;
+                sass.removeFile('_variables.scss');
+                sass.writeFile('_variables.scss', mySassVars);
+                sass.compile('@import "_utilities"; @import "_variables"; @import "_wffmStyling";', function(result) {
+                    //console.log("compiled", result.text);
+                    $('.demoPane').prepend('<style>' + result.text+ '</style>');
+                    $('.download .copycss textarea').val(result.text);
+
+                });
+            });
         });
-        for (x in valueslist) {
-            wffmvars += '$' +  x + ' : ' + valueslist[x] + "; ";
-        }
-        console.log(wffmvars);
-        mySassVars= wffmvars;
-        sass.removeFile('_variables.scss');
-        sass.writeFile('_variables.scss', mySassVars);
-        sass.compile('@import "_utilities"; @import "_variables"; @import "_wffmStyling";', function(result) {
-            //console.log("compiled", result.text);
-            $('.demoPane').prepend('<style>' + result.text+ '</style>'); 
-            $('.download textarea').val(result.text); 
-
-        });
-    });
-});
 
 
 
@@ -549,7 +549,7 @@ $.when(
                             <div class="csseditorlabel">
                                 <div class="formElemWrapper">
                                     <div class="inputbox possibleFading">
-                                        <label>Show on hover</label><div><input value="false" id="helptip-showonhover" type="text" /> <span class="tip">if true, the helptips are hidden by default, and only shown on hover. On touch devices they are allways shown if you implement modernizr (touch) because there is no hover on touch devices - todo: to check. </span>  </div>
+                                        <label>Show on hover</label><div><input value="false" id="helptip-showonhover" type="text" /> <span class="tip">if true, the helptips are hidden by default, and only shown on hover. Keep in mind that there is no "hover" on touch-screens, so these helptips will never be shown unless you implement "<a href="https://modernizr.com/" target="_blank">modernizr</a>" (touch). </span>  </div>
                                     </div>
                                 </div>
                             </div>
@@ -906,7 +906,7 @@ $.when(
             <div class="downloadtitle">
                 download
             </div>
-            <div class="downcopy">
+            <div class="downcopy copycss">
                 <span>Copy the css below and paste it in your project</span>
                 <textarea onclick="this.focus();this.select()" readonly="readonly"></textarea>
             </div>
@@ -1056,11 +1056,3 @@ $.when(
 
 </body>
 </html>
-
-
-
-
-
-
-
-
