@@ -38,11 +38,11 @@ body, html {width: 100%; height: 100%;position:relative; margin: 0; padding: 0;}
 .emptyClearing {clear:both; width: 100%;}      
 .downloadtitle { font: 700 20px/18px 'courier', monospace;  text-transform: uppercase;}
 
-.InputPane {width: 70%; height: 100%;  position:absolute;@include myboxmodel;  @include WLtransition(all 0.4s ease-out); right: -68%;  top: 0;   z-index: 2; background: #eee; box-shadow: -2px 2px 2px rgba(0,0,0,0.4);
+.InputPane {width: 70%; height: 100%;  position:absolute;@include myboxmodel;  @include WLtransition(all 0.4s ease-out); right: -68%;  top: 0;   z-index: 2; background: #ccc; box-shadow: -2px 2px 2px rgba(0,0,0,0.4);
   animation-name: getattention; animation-duration: 1s;   
     form {overflow: auto;padding: 40px 20px 40px 40px; height: 100%; position:absolute; @include myboxmodel; }
     /*&:before {content: " > "; position:absolute; left: -40px; top: 0 ; height: 40px; width: 40px; background: #eee;  z-index: 3; box-shadow:-2px 2px 2px rgba(0,0,0,0.4);}*/
-    .iconbox { position:absolute; left: -50px; top: 0 ; height: 50px; width: 50px; background: #eee;  z-index: 3; box-shadow:-2px 2px 2px rgba(0,0,0,0.4); text-align:center; line-height: 50px; font-size: 24px;}
+    .iconbox { position:absolute; left: -50px; top: 0 ; height: 50px; width: 50px; background: #ccc;  z-index: 3; box-shadow:-2px 2px 2px rgba(0,0,0,0.4); text-align:center; line-height: 50px; font-size: 24px;}
     &:hover {right: 0%;}
     .tip {font-size: 12px}
     h2, h3, p, a.showmore {clear:both;}
@@ -52,12 +52,12 @@ body, html {width: 100%; height: 100%;position:relative; margin: 0; padding: 0;}
     input {display:block}
     }
     #myCssEditor {margin-bottom: 280px; } 
-    section { padding: 10px 15px ; background: #fff; border-radius: 5px; border: 1px solid rgba(206, 204, 204, 1); margin-bottom: 40px;}
+    section { padding: 10px 15px ; background: #fff; border-radius: 5px; border: 1px solid #888; margin-bottom: 40px;}
 
   
    .download {position:absolute; bottom: 0; right: 0; background: #444; border-top: 1px solid #111;@include myboxmodel; padding: 20px 0 20px 40px; width:100%; color: #fff;
        .downcopy {float:left;width: 50%; padding-right: 20px; @include myboxmodel;}
-       .downcopy span {font-size: 12px;}
+       .downcopy span {font-size: 12px; line-height: 16px; display: inline-block;}
           textarea {font-size: 10px; height: 80px; }
    }
    .download a {color: #fff;}
@@ -104,12 +104,14 @@ html.no-flexboxlegacy, html.no-flexbox  {
 @import "_colorbox.scss"; 
 @import "_bxslider.scss"; 
 
-.indexpane { position:absolute; left: 0;top: 0; width: 100%; height: 100%;  background: #DADADA; padding: 30px;  @include myboxmodel;@include WLtransition(all 0.4s ease-out); overflow: auto;
+.indexpane { position:absolute; left: 0;top: 0; width: 100%; height: 100%;  background: #ccc; padding: 30px;  @include myboxmodel;@include WLtransition(all 0.4s ease-out); overflow: auto;
     section {padding: 40px 60px;}
 
     .downloadtitle {padding-bottom: 15px;}
     .specialwrapper {max-width: 1000px; margin: 0 auto;background: transparent url(http://www.boondoggle.eu/wp-content/themes/wordpressBoilerplateTemplate/img/boondoggle.png) no-repeat right top; background-size: auto 25px;}
     h1 {padding-bottom: 15px; margin-top: 10px;}
+    ol li ul {margin-top: 0}
+    ol li ul li {margin-bottom: 0}
 }
 
 .buttonbox {paddding: 50px 0 0 0;
